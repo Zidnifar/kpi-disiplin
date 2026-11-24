@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('judul', 'Dashboard') · KPI Kedisiplinan</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <link rel="stylesheet" href="{{ asset('css/kpi.css') }}">
 </head>
 <body>
@@ -15,7 +16,9 @@
 <div class="app">
     <aside class="sidebar">
         <div class="brand">
-            <div class="brand-logo">KPI</div>
+            <div class="brand-logo brand-logo-gambar">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo PT. Intanwijaya" onerror="this.parentNode.textContent='KPI'">
+            </div>
             <div class="brand-teks">
                 <strong>KPI Kedisiplinan</strong>
                 <span>PT. Intanwijaya Internasional Tbk.</span>
