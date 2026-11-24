@@ -4,11 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-/**
- * Tambahan untuk tahap 3-5:
- *  - shift_kerja.status_shift : shift bisa dinonaktifkan (Aktif | Nonaktif)
- *  - rencana_lembur.id_shift  : shift yang dipilih pada formulir pengajuan lembur (opsional, tanpa FK agar aman di SQLite)
- */
+
 return new class extends Migration
 {
     public function up(): void
