@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,15 +12,15 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Illuminate\Foundation\Configuration\Middleware $middleware) {
-        $middleware->alias(['role' => App\Http\Middleware\RoleMiddleware::class]);
-    })
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Vercel berada di depan aplikasi sebagai proxy HTTPS: percayai header X-Forwarded-*
+        // supaya Laravel tahu koneksinya HTTPS dan membuat alamat form berawalan https://.
+        $middleware->trustProxies(at: '*');
+
+        $middleware->alias(['role' => RoleMiddleware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
-    
