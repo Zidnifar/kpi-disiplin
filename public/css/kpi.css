@@ -285,5 +285,5 @@ table.tabel { width: 100%; border-collapse: collapse; font-size: 14px; }
 .submenu-item.nonaktif { opacity: .4; cursor: not-allowed; }
 .submenu-item.nonaktif:hover { background: transparent; }
 
-.brand-logo.brand-logo-gambar { background: #fff; padding: 6px; }
+.brand-logo.brand-logo-gambar { background: transparent; padding: 0; }
 .brand-logo-gambar img { width: 100%; height: 100%; object-fit: contain; }
