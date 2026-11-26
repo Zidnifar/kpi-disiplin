@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('judul', 'Data Absensi')
+@section('title', 'Konfirmasi Kehadiran')
 
 @section('isi')
 @php
@@ -14,262 +14,104 @@
     $catatanAwal = old('catatan', $absensi->kesalahan->firstWhere('catatan', '!=', null)?->catatan ?? '');
 @endphp
 
-<style>
-.konf-wrap {
-    width: 100%;
-    max-width: none;
-    padding: 0 8px 28px;
-    box-sizing: border-box;
-    color: #111827;
-    font-family: 'Segoe UI', Inter, Arial, sans-serif;
-}
-.konf-wrap * {
-    box-sizing: border-box;
-}
-.konf-page-title {
-    margin: 0 0 8px;
-    font-size: 24px;
-    font-weight: 700;
-    color: #0f172a;
-}
-.konf-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    margin-bottom: 18px;
-}
-.konf-breadcrumb a {
-    color: #4f6bed;
-    text-decoration: none;
-    font-weight: 500;
-}
-.konf-breadcrumb a:hover {
-    text-decoration: underline;
-}
-.konf-breadcrumb span.sep {
-    color: #9ca3af;
-}
-.konf-breadcrumb span.current {
-    color: #374151;
-    font-weight: 600;
-}
-.konf-outer {
-    background: #eef2f7;
-    border-radius: 22px;
-    padding: 18px;
-}
-.konf-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 26px 28px;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
-}
-.konf-card-title {
-    margin: 0 0 18px;
-    font-size: 18px;
-    font-weight: 700;
-    color: #111827;
-}
-.konf-employee-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: #111827;
-    margin-bottom: 3px;
-}
-.konf-employee-meta {
-    font-size: 13px;
-    color: #6b7280;
-    margin-bottom: 22px;
-}
-.konf-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: 24px;
-    align-items: start;
-}
-.konf-label {
-    display: block;
-    font-size: 13.5px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 8px;
-}
-.konf-textarea {
-    width: 100%;
-    min-height: 120px;
-    padding: 12px 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 10px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 13.5px;
-    font-family: inherit;
-    resize: vertical;
-}
-.konf-textarea::placeholder {
-    color: #9ca3af;
-}
-.konf-textarea:focus,
-.konf-select:focus {
-    outline: none;
-    border-color: #f97316;
-}
-.konf-select {
-    width: 100%;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 13.5px;
-    font-family: inherit;
-    cursor: pointer;
-}
-.konf-error {
-    margin-top: 6px;
-    font-size: 12.5px;
-    color: #dc2626;
-    font-weight: 500;
-}
-.konf-actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 12px;
-    margin-top: 22px;
-}
-.btn-konf-simpan {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 104px;
-    height: 36px;
-    padding: 0 22px;
-    border: none;
-    border-radius: 8px;
-    background: #f97316;
-    color: #ffffff;
-    font-size: 13.5px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-.btn-konf-simpan:hover {
-    background: #ea580c;
-}
-.btn-konf-batal {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 104px;
-    height: 36px;
-    padding: 0 22px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 13.5px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: background 0.15s ease, border-color 0.15s ease;
-}
-.btn-konf-batal:hover {
-    background: #f9fafb;
-    border-color: #9ca3af;
-}
-@media (max-width: 768px) {
-    .konf-grid {
-        grid-template-columns: 1fr;
-    }
-    .konf-actions {
-        justify-content: stretch;
-    }
-    .btn-konf-simpan,
-    .btn-konf-batal {
-        flex: 1;
-    }
-}
-</style>
+<div class="konfirmasi-page" style="width: 100%; padding: 0 8px 24px; color: #101828; box-sizing: border-box;">
+    <!-- Breadcrumb / Navigasi Halaman -->
+    <div class="breadcrumb-area" style="margin-bottom: 20px; font-size: 13px; color: #667085;">
+        <a href="{{ route('admin.absensi.index') }}" style="color: #667085; text-decoration: none;">Data Absensi</a>
+        <span style="margin: 0 6px;">/</span>
+        <a href="{{ $urlKembali }}" style="color: #667085; text-decoration: none;">Periksa Kesalahan</a>
+        <span style="margin: 0 6px;">/</span>
+        <span style="color: #101828; font-weight: 500;">Konfirmasi Kehadiran</span>
+    </div>
 
-<div class="konf-wrap">
-    <h1 class="konf-page-title">Data Absensi</h1>
-
-    <nav class="konf-breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ route('admin.absensi.index') }}">Data Absensi</a>
-        <span class="sep">/</span>
-        <a href="{{ $urlKembali }}">Periksa Kesalahan</a>
-        <span class="sep">/</span>
-        <span class="current">Konfirmasi Kehadiran</span>
-    </nav>
-
-    <div class="konf-outer">
-        <div class="konf-card">
-            <h2 class="konf-card-title">Konfirmasi kehadiran</h2>
-
-            <div class="konf-employee-name">{{ $namaKaryawan }}</div>
-            <div class="konf-employee-meta">{{ $metaBaris }}</div>
-
-            @if ($absensi->konfirmasi)
-                <div class="alert alert-info" style="margin-bottom: 18px;">
-                    Karyawan sudah mengirim konfirmasi ({{ $absensi->konfirmasi->ringkasanJawaban() }}) — status: {{ $absensi->konfirmasi->status_konfir }}.
-                    @if ($absensi->konfirmasi->status_konfir === 'Menunggu verifikasi')
-                        <a href="{{ route('admin.verifikasi.show', $absensi->konfirmasi) }}">Buka halaman verifikasi</a>.
-                    @endif
-                </div>
-            @endif
-
-            @if ($selesai)
-                <div class="alert alert-sukses" style="margin-bottom: 18px;">
-                    Data ini sudah dikonfirmasi. Status akhir: {{ $absensi->status_kehadiran }}.
-                </div>
-                @if ($catatanAwal !== '')
-                    <div class="catatan-kotak" style="margin-bottom: 18px;">{{ $catatanAwal }}</div>
-                @endif
-                <div class="konf-actions">
-                    <a href="{{ $urlKembali }}" class="btn-konf-batal">Kembali</a>
-                </div>
-            @else
-                <form method="POST" action="{{ route('admin.kesalahan.simpan', $absensi) }}" novalidate>
-                    @csrf
-                    @method('PUT')
-
-                    <div class="konf-grid">
-                        <div>
-                            <label for="catatan" class="konf-label">Informasi dari pihak terkait</label>
-                            <textarea
-                                id="catatan"
-                                name="catatan"
-                                class="konf-textarea"
-                                placeholder="Tulis hasil konfirmasi"
-                            >{{ $catatanAwal }}</textarea>
-                            @error('catatan')
-                                <div class="konf-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div>
-                            <label for="status_kehadiran" class="konf-label">Status kehadiran</label>
-                            <select id="status_kehadiran" name="status_kehadiran" class="konf-select" required>
-                                <option value="">Pilih status</option>
-                                @foreach ($statusPilihan as $s)
-                                    <option value="{{ $s }}" @selected(old('status_kehadiran') === $s)>{{ $s }}</option>
-                                @endforeach
-                            </select>
-                            @error('status_kehadiran')
-                                <div class="konf-error">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="konf-actions">
-                        <button type="submit" class="btn-konf-simpan">Simpan</button>
-                        <a href="{{ $urlKembali }}" class="btn-konf-batal">Batal</a>
-                    </div>
-                </form>
-            @endif
+    <!-- Card Formulir -->
+    <div class="content-card" style="background: #fff; border: 1px solid #d0d5dd; border-radius: 20px; padding: 28px 32px; box-sizing: border-box;">
+        <div class="form-header" style="margin-bottom: 24px;">
+            <h2 style="font-size: 20px; font-weight: 700; color: #101828; margin: 0 0 4px;">Konfirmasi Kehadiran</h2>
+            <p style="font-size: 13px; color: #667085; margin: 0;">Tetapkan status kehadiran dan informasi konfirmasi untuk data yang bermasalah[cite: 7, 18].</p>
         </div>
+
+        <!-- Info Karyawan -->
+        <div style="margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #eaecf0;">
+            <div style="font-size: 15px; font-weight: 700; color: #101828; margin-bottom: 4px;">{{ $namaKaryawan }}[cite: 18]</div>
+            <div style="font-size: 13px; color: #667085;">{{ $metaBaris }}[cite: 18]</div>
+        </div>
+
+        @if ($absensi->konfirmasi)
+            <div style="margin-bottom: 20px; padding: 14px 16px; border-radius: 12px; background: #eff8ff; border: 1px solid #b2ddff; color: #175cd3; font-size: 13px;">
+                Karyawan sudah mengirim konfirmasi ({{ $absensi->konfirmasi->ringkasanJawaban() }}) — status: {{ $absensi->konfirmasi->status_konfir }}[cite: 7].
+                @if ($absensi->konfirmasi->status_konfir === 'Menunggu verifikasi')
+                    <a href="{{ route('admin.verifikasi.show', $absensi->konfirmasi) }}" style="color: #175cd3; font-weight: 600; text-decoration: underline;">Buka halaman verifikasi</a>[cite: 7].
+                @endif
+            </div>
+        @endif
+
+        @if ($selesai)
+            <div style="margin-bottom: 20px; padding: 14px 16px; border-radius: 12px; background: #ecfdf3; border: 1px solid #abefc6; color: #067647; font-size: 13px;">
+                Data ini sudah dikonfirmasi. Status akhir: <strong>{{ $absensi->status_kehadiran }}</strong>[cite: 7, 18].
+            </div>
+
+            @if ($catatanAwal !== '')
+                <div style="margin-bottom: 24px; padding: 14px 16px; border-radius: 12px; background: #f9fafb; border: 1px solid #d0dbea; font-size: 13.5px; color: #344054;">
+                    {{ $catatanAwal }}[cite: 7]
+                </div>
+            @endif
+
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+                <a href="{{ $urlKembali }}" style="height: 44px; padding: 0 24px; border: 1px solid #d0d5dd; border-radius: 11px; background: #fff; color: #344054; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
+                    Kembali[cite: 7]
+                </a>
+            </div>
+        @else
+            <form method="POST" action="{{ route('admin.kesalahan.simpan', $absensi) }}" autocomplete="off" novalidate>
+                @csrf
+                @method('PUT')
+
+                <div style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; margin-bottom: 32px; align-items: start;">
+                    <div>
+                        <label for="catatan" style="display: block; font-size: 13px; font-weight: 600; color: #344054; margin-bottom: 8px;">Informasi dari pihak terkait[cite: 18]</label>
+                        <textarea
+                            id="catatan"
+                            name="catatan"
+                            rows="4"
+                            placeholder="Tulis hasil konfirmasi[cite: 18]"
+                            style="width: 100%; min-height: 116px; padding: 12px 14px; border: 1px solid #d0dbea; border-radius: 11px; font-size: 14px; color: #101828; background: #fff; font-family: inherit; resize: vertical; outline: none; box-sizing: border-box;"
+                        >{{ $catatanAwal }}</textarea>
+                        @error('catatan')
+                            <span style="font-size: 12px; color: #d92d20; display: block; margin-top: 4px;">{{ $message }}[cite: 7]</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="status_kehadiran" style="display: block; font-size: 13px; font-weight: 600; color: #344054; margin-bottom: 8px;">Status kehadiran[cite: 18]</label>
+                        <select
+                            id="status_kehadiran"
+                            name="status_kehadiran"
+                            required
+                            style="width: 100%; height: 44px; padding: 0 42px 0 14px; border: 1px solid #d0dbea; border-radius: 11px; font-size: 14px; color: #344054; background-color: #fff; outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23101828' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E&quot;); background-repeat: no-repeat; background-position: right 16px center;"
+                        >
+                            <option value="">Pilih status[cite: 18]</option>
+                            @foreach ($statusPilihan as $s)
+                                <option value="{{ $s }}" @selected(old('status_kehadiran') === $s)>{{ $s }}[cite: 7]</option>
+                            @endforeach
+                        </select>
+                        @error('status_kehadiran')
+                            <span style="font-size: 12px; color: #d92d20; display: block; margin-top: 4px;">{{ $message }}[cite: 7]</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi (Batal & Simpan) -->
+                <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;">
+                    <a href="{{ $urlKembali }}" style="height: 44px; padding: 0 24px; border: 1px solid #d0d5dd; border-radius: 11px; background: #fff; color: #344054; font-size: 14px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
+                        Batal[cite: 18, 23]
+                    </a>
+                    <button type="submit" style="height: 44px; padding: 0 24px; border: 0; border-radius: 11px; background: #ff941c; color: #fff; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: background 0.2s;">
+                        <span>✓</span> Simpan[cite: 18, 23]
+                    </button>
+                </div>
+            </form>
+        @endif
     </div>
 </div>
 @endsection
