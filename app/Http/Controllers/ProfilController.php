@@ -51,4 +51,26 @@ class ProfilController extends Controller
 
         return redirect()->route('profil')->with('sukses', 'Password berhasil diubah.');
     }
+
+    public function simpanFoto(Request $request)
+    {
+        $request->validate([
+            'foto' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ], [
+            'foto.required' => 'Pilih file foto terlebih dahulu.',
+            'foto.image' => 'File harus berupa gambar.',
+            'foto.mimes' => 'Format foto harus JPG, PNG, atau WebP.',
+            'foto.max' => 'Ukuran foto maksimal 2 MB.',
+        ]);
+
+        $file = $request->file('foto');
+        $mime = $file->getMimeType();
+        $base64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+
+        $pengguna = $request->user();
+        $pengguna->foto = $base64;
+        $pengguna->save();
+
+        return back()->with('sukses', 'Foto profil berhasil diperbarui.');
+    }
 }

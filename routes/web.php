@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfilController::class, 'tampil'])->name('profil');
     Route::get('/profil/password', [ProfilController::class, 'formPassword'])->name('profil.password');
     Route::put('/profil/password', [ProfilController::class, 'ubahPassword'])->name('profil.password.update');
+    Route::get('/profil', [ProfilController::class, 'tampil'])->name('profil');
+    Route::post('/profil/foto', [ProfilController::class, 'simpanFoto'])->name('profil.foto');
+    Route::get('/profil/password', [ProfilController::class, 'formPassword'])->name('profil.password');
+    Route::put('/profil/password', [ProfilController::class, 'ubahPassword'])->name('profil.password.update');
 
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('pengguna', [Admin\PenggunaController::class, 'index'])->name('pengguna.index');
