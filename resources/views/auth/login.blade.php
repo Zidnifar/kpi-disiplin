@@ -268,7 +268,6 @@
         <div class="brand">
             <img src="{{ asset('images/logo.png') }}" alt="Logo PT. Intanwijaya" onerror="this.remove();">
             <h1>KPI Kedisiplinan</h1>
-            <p>Departemen Formalin</p>
         </div>
         <p class="tagline">Bersama membangun disiplin untuk kinerja yang lebih baik.</p>
     </aside>
