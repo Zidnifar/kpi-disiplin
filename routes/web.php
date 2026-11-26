@@ -52,7 +52,6 @@ Route::middleware('auth')->group(function () {
         Route::post('absensi/impor', [Admin\AbsensiController::class, 'proses'])->name('absensi.proses');
 
         Route::get('kesalahan', [Admin\KesalahanAbsensiController::class, 'index'])->name('kesalahan.index');
-        Route::get('konfirmasi', [Admin\KesalahanAbsensiController::class, 'daftarKonfirmasi'])->name('konfirmasi.index');
         Route::get('kesalahan/{absensi}', [Admin\KesalahanAbsensiController::class, 'konfirmasi'])->name('kesalahan.konfirmasi');
         Route::put('kesalahan/{absensi}', [Admin\KesalahanAbsensiController::class, 'simpan'])->name('kesalahan.simpan');
 

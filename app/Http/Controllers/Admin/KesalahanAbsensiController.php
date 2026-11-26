@@ -9,6 +9,7 @@ use App\Models\Absensi;
 use App\Models\KesalahanAbsensi;
 use App\Services\AbsensiKoreksiService;
 use DomainException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -17,60 +18,46 @@ class KesalahanAbsensiController extends Controller
 {
     use MemakaiBulan;
 
+    /**
+     * Hanya data yang belum diperbaiki admin dan belum dikonfirmasi karyawan.
+     */
+    private function queryPerluDiperiksa(string $awal, string $akhir): Builder
+    {
+        return KesalahanAbsensi::query()
+            ->whereHas(
+                'absensi',
+                fn (Builder $q) => $q->whereBetween('tanggal_absen', [$awal, $akhir])
+            )
+            ->where('status_perbaikan', '!=', 'Selesai')
+            ->whereHas('absensi', function (Builder $q) {
+                $q->whereDoesntHave('konfirmasi', function (Builder $kq) {
+                    $kq->where(function (Builder $sub) {
+                        $sub->whereNotNull('status_konfir')
+                            ->whereNotIn('status_konfir', ['Belum dikonfirmasi', '']);
+                    });
+                });
+            });
+    }
+
     public function index(Request $request)
     {
         $bulan = $this->bulanDipilih($request, $this->bulanDariTanggal(Absensi::max('tanggal_absen')));
         [$awal, $akhir] = $this->rentangBulan($bulan);
 
-        $dasar = fn () => KesalahanAbsensi::whereHas(
-            'absensi',
-            fn ($q) => $q->whereBetween('tanggal_absen', [$awal, $akhir])
-        );
-
-        $ringkasan = [
-            'total' => $dasar()->count(),
-            'tidak_excel' => $dasar()->where('jenis_kesalahan', 'Tidak ada di file Excel')->count(),
-            'belum' => $dasar()->where('status_perbaikan', '!=', 'Selesai')->count(),
-            'selesai' => $dasar()->where('status_perbaikan', 'Selesai')->count(),
-        ];
-
-        $daftar = $dasar()
+        $daftar = $this->queryPerluDiperiksa($awal, $akhir)
             ->with(['absensi.karyawan', 'absensi.konfirmasi'])
-            ->when($request->filled('jenis'), fn ($q) => $q->where('jenis_kesalahan', $request->input('jenis')))
-            ->when($request->filled('status'), function ($q) use ($request) {
-                $request->input('status') === 'Selesai'
-                    ? $q->where('status_perbaikan', 'Selesai')
-                    : $q->where('status_perbaikan', '!=', 'Selesai');
-            })
-            ->orderBy(Absensi::select('tanggal_absen')->whereColumn('absensi.id_absensi', 'kesalahan_absensi.id_absensi'))
+            ->when($request->filled('jenis'), fn (Builder $q) => $q->where('jenis_kesalahan', $request->input('jenis')))
+            ->orderBy(
+                Absensi::select('tanggal_absen')
+                    ->whereColumn('absensi.id_absensi', 'kesalahan_absensi.id_absensi')
+            )
             ->paginate(20)
             ->withQueryString();
 
         return view('admin.kesalahan.index', [
             'daftar' => $daftar,
-            'ringkasan' => $ringkasan,
             'bulan' => $bulan,
             'jenisPilihan' => KesalahanAbsensi::query()->distinct()->orderBy('jenis_kesalahan')->pluck('jenis_kesalahan'),
-        ]);
-    }
-
-    public function daftarKonfirmasi(Request $request)
-    {
-        $bulan = $this->bulanDipilih($request, $this->bulanDariTanggal(Absensi::max('tanggal_absen')));
-        [$awal, $akhir] = $this->rentangBulan($bulan);
-
-        $daftarKonfirmasi = KesalahanAbsensi::whereHas(
-            'absensi',
-            fn ($q) => $q->whereBetween('tanggal_absen', [$awal, $akhir])
-        )
-            ->with(['absensi.karyawan', 'absensi.konfirmasi'])
-            ->orderBy(Absensi::select('tanggal_absen')->whereColumn('absensi.id_absensi', 'kesalahan_absensi.id_absensi'))
-            ->paginate(20)
-            ->withQueryString();
-
-        return view('admin.konfirmasi.index', [
-            'daftarKonfirmasi' => $daftarKonfirmasi,
-            'bulan' => $bulan,
         ]);
     }
 
@@ -81,7 +68,8 @@ class KesalahanAbsensiController extends Controller
         return view('admin.kesalahan.konfirmasi', [
             'absensi' => $absensi,
             'statusPilihan' => AttendanceRules::statusPilihan(),
-            'selesai' => $absensi->kesalahan->isNotEmpty() && $absensi->kesalahan->every(fn ($k) => $k->status_perbaikan === 'Selesai'),
+            'selesai' => $absensi->kesalahan->isNotEmpty()
+                && $absensi->kesalahan->every(fn ($k) => $k->status_perbaikan === 'Selesai'),
         ]);
     }
 
@@ -109,7 +97,8 @@ class KesalahanAbsensiController extends Controller
             return back()->withInput()->with('galat', $e->getMessage());
         }
 
-        return redirect()->route('admin.kesalahan.index', ['bulan' => $absensi->tanggal_absen->format('Y-m')])
+        return redirect()
+            ->route('admin.kesalahan.index', ['bulan' => $absensi->tanggal_absen->format('Y-m')])
             ->with('sukses', 'Status kehadiran berhasil ditetapkan.');
     }
 }
