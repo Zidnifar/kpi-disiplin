@@ -54,6 +54,26 @@ class KesalahanAbsensiController extends Controller
         ]);
     }
 
+    public function daftarKonfirmasi(Request $request)
+    {
+        $bulan = $this->bulanDipilih($request, $this->bulanDariTanggal(Absensi::max('tanggal_absen')));
+        [$awal, $akhir] = $this->rentangBulan($bulan);
+
+        $daftarKonfirmasi = KesalahanAbsensi::whereHas(
+            'absensi',
+            fn ($q) => $q->whereBetween('tanggal_absen', [$awal, $akhir])
+        )
+            ->with(['absensi.karyawan', 'absensi.konfirmasi'])
+            ->orderBy(Absensi::select('tanggal_absen')->whereColumn('absensi.id_absensi', 'kesalahan_absensi.id_absensi'))
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.konfirmasi.index', [
+            'daftarKonfirmasi' => $daftarKonfirmasi,
+            'bulan' => $bulan,
+        ]);
+    }
+
     public function konfirmasi(Absensi $absensi)
     {
         $absensi->load(['karyawan', 'jadwal.shift', 'kesalahan', 'konfirmasi']);

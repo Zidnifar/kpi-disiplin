@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::post('absensi/impor', [Admin\AbsensiController::class, 'proses'])->name('absensi.proses');
 
         Route::get('kesalahan', [Admin\KesalahanAbsensiController::class, 'index'])->name('kesalahan.index');
+        Route::get('konfirmasi', [Admin\KesalahanAbsensiController::class, 'daftarKonfirmasi'])->name('konfirmasi.index');
         Route::get('kesalahan/{absensi}', [Admin\KesalahanAbsensiController::class, 'konfirmasi'])->name('kesalahan.konfirmasi');
         Route::put('kesalahan/{absensi}', [Admin\KesalahanAbsensiController::class, 'simpan'])->name('kesalahan.simpan');
 
@@ -135,7 +136,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('realisasi', [Unit\RealisasiLemburController::class, 'index'])->name('realisasi.index');
         Route::get('realisasi/{rencana}', [Unit\RealisasiLemburController::class, 'edit'])->name('realisasi.edit');
-        Route::put('realisasi/{rencana}', [Unit\RencanaLemburController::class, 'update'])->name('realisasi.update');
+        Route::put('realisasi/{rencana}', [Unit\RealisasiLemburController::class, 'update'])->name('realisasi.update');
 
         Route::get('laporan', [LaporanKpiController::class, 'index'])->name('laporan');
         Route::get('laporan/cetak', [LaporanKpiController::class, 'cetak'])->name('laporan.cetak');
