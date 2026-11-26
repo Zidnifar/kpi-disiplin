@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,8 +14,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Vercel berada di depan aplikasi sebagai proxy HTTPS: percayai header X-Forwarded-*
-        // supaya Laravel tahu koneksinya HTTPS dan membuat alamat form berawalan https://.
         $middleware->trustProxies(at: '*');
 
         $middleware->alias(['role' => RoleMiddleware::class]);
@@ -23,4 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->report(function (Throwable $e) {
+            error_log('[APP-ERR] ' . get_class($e) . ': ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+        });
     })->create();
