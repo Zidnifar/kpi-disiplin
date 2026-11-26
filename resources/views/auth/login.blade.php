@@ -7,8 +7,14 @@
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --navy: #172b4d;
+            --biru: #2f5fa8;
+            --biru-muda: #eaf1fb;
+            --oranye: #ff941c;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif; }
 
         body.halaman-login {
@@ -17,86 +23,241 @@
             align-items: center;
             justify-content: center;
             padding: 24px;
-            background: #f4f6f9;
+            background: linear-gradient(160deg, #eef3fb 0%, #f6f8fc 55%, #fdf3e6 100%);
         }
 
+        /* kotak login dibuat ringkas */
         .login-wrapper {
-            width: 860px;
+            width: 720px;
             max-width: 100%;
-            min-height: 500px;
             background: #fff;
-            border: 1px solid #e4e7ec;
-            border-radius: 20px;
+            border: 1px solid #dfe6f2;
+            border-radius: 18px;
             display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            box-shadow: 0 10px 30px rgba(16, 24, 40, .07);
+            grid-template-columns: 1fr 1.05fr;
+            box-shadow: 0 14px 36px rgba(23, 43, 77, .10);
             overflow: hidden;
         }
 
+        /* sisi kiri: biru muda, logo tanpa latar putih */
         .login-sidebar {
-            background: #172b4d;
-            color: #fff;
-            padding: 40px;
+            position: relative;
+            padding: 36px 32px;
+            background: linear-gradient(165deg, #dfeafb 0%, #eef4fc 60%, #f8fafe 100%);
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            text-align: center;
-            gap: 18px;
+            gap: 28px;
+            overflow: hidden;
         }
-        .login-sidebar img { width: 120px; height: 120px; object-fit: contain; }
-        .login-sidebar h1 { font-size: 22px; font-weight: 700; }
-        .login-sidebar p { font-size: 13px; color: rgba(255, 255, 255, .7); line-height: 1.5; }
+        .login-sidebar::before, .login-sidebar::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .login-sidebar::before { 
+            width: 190px; 
+            height: 190px; 
+            left: -70px; 
+            bottom: -70px; 
+            background: rgba(47, 95, 168, .10); 
+        }
+        .login-sidebar::after { 
+            width: 120px; 
+            height: 120px; 
+            right: -40px; 
+            top: -40px; 
+            background: rgba(255, 148, 28, .12); 
+        }
+        .login-sidebar > * { 
+            position: relative; 
+            z-index: 1; 
+        }
+
+        .brand img { 
+            width: 92px; 
+            height: 92px; 
+            object-fit: contain; 
+            display: block; 
+            margin-bottom: 16px; 
+        }
+        .brand h1 { 
+            font-size: 22px; 
+            font-weight: 800; 
+            color: var(--navy); 
+            letter-spacing: -.3px; 
+        }
+        .brand p { 
+            font-size: 14px; 
+            color: var(--biru); 
+            font-weight: 500; 
+            margin-top: 3px; 
+        }
+        .tagline { 
+            font-size: 12.5px; 
+            line-height: 1.55; 
+            color: #5b6b86; 
+            max-width: 210px; 
+        }
 
         /* sisi kanan: formulir */
-        .login-main { padding: 52px 48px; display: flex; flex-direction: column; justify-content: center; }
-        .logo-mobile { display: none; }
-        .form-header { margin-bottom: 26px; }
-        .form-header h2 { font-size: 24px; font-weight: 700; color: #101828; margin-bottom: 6px; }
-        .form-header p { font-size: 13.5px; color: #667085; }
+        .login-main { 
+            padding: 38px 36px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            gap: 12px; 
+        }
+        .logo-mobile { 
+            display: none; 
+        }
+        .form-header { 
+            margin-bottom: 20px; 
+        }
+        .form-header h2 { 
+            font-size: 19px; 
+            font-weight: 800; 
+            color: var(--navy); 
+            margin-bottom: 5px; 
+        }
+        .form-header p { 
+            font-size: 12.5px; 
+            color: #667085; 
+            line-height: 1.5; 
+        }
 
         .alert-login {
-            background: #fef3f2; border: 1px solid #fecdca; color: #b42318;
-            border-radius: 10px; padding: 11px 14px; font-size: 13px; margin-bottom: 18px;
+            background: #fef3f2; 
+            border: 1px solid #fecdca; 
+            color: #b42318;
+            border-radius: 9px; 
+            padding: 9px 12px; 
+            font-size: 12.5px; 
+            margin-bottom: 14px;
         }
 
-        .bidang { margin-bottom: 18px; }
-        .bidang label { display: block; font-size: 13px; font-weight: 600; color: #344054; margin-bottom: 8px; }
-        .input-group { position: relative; display: flex; align-items: center; }
-        .input-group .icon-left { position: absolute; left: 14px; width: 18px; height: 18px; color: #98a2b3; pointer-events: none; }
-        .input-group input {
-            width: 100%; height: 46px; padding: 0 44px 0 42px;
-            border: 1px solid #d0d5dd; border-radius: 10px; background: #fff;
-            font-size: 14px; color: #101828; outline: none;
-            transition: border-color .2s, box-shadow .2s;
+        .bidang { 
+            margin-bottom: 14px; 
         }
-        .input-group input::placeholder { color: #98a2b3; }
-        .input-group input:focus { border-color: #ff941c; box-shadow: 0 0 0 3px rgba(255, 148, 28, .15); }
-        .input-group.salah input { border-color: #f04438; }
+        .bidang label { 
+            display: block; 
+            font-size: 12.5px; 
+            font-weight: 700; 
+            color: var(--navy); 
+            margin-bottom: 6px; 
+        }
+        .input-group { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+        }
+        .input-group .icon-left { 
+            position: absolute; 
+            left: 12px; 
+            width: 16px; 
+            height: 16px; 
+            color: #7b8aa5; 
+            pointer-events: none; 
+            transition: color .2s; 
+        }
+        .input-group input {
+            width: 100%; 
+            height: 40px; 
+            padding: 0 40px 0 36px;
+            border: 1px solid #d3ddee; 
+            border-radius: 9px; 
+            background: #f2f6fc;
+            font-size: 13px; 
+            color: #101828; 
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .input-group input::placeholder { 
+            color: #97a4bb; 
+        }
+        .input-group input:focus { 
+            background: #fff; 
+            border-color: var(--biru); 
+            box-shadow: 0 0 0 3px rgba(47, 95, 168, .15); 
+        }
+        .input-group:focus-within .icon-left { 
+            color: var(--biru); 
+        }
+        .input-group.salah input { 
+            border-color: #f04438; 
+        }
 
         .btn-toggle-password {
-            position: absolute; right: 6px; width: 34px; height: 34px;
-            background: transparent; border: 0; border-radius: 8px; cursor: pointer; color: #667085;
-            display: grid; place-items: center;
+            position: absolute; 
+            right: 5px; 
+            width: 30px; 
+            height: 30px;
+            background: transparent; 
+            border: 0; 
+            border-radius: 7px; 
+            cursor: pointer; 
+            color: #7b8aa5;
+            display: grid; 
+            place-items: center;
         }
-        .btn-toggle-password:hover { color: #101828; }
-        .btn-toggle-password svg { width: 18px; height: 18px; }
+        .btn-toggle-password:hover { 
+            color: var(--navy); 
+        }
+        .btn-toggle-password svg { 
+            width: 16px; 
+            height: 16px; 
+        }
 
         .tombol-masuk {
-            width: 100%; height: 46px; margin-top: 6px;
-            border: 0; border-radius: 10px; cursor: pointer;
-            background: #ff941c; color: #fff; font-size: 14.5px; font-weight: 600;
+            width: 100%; 
+            height: 40px; 
+            margin-top: 4px;
+            border: 0; 
+            border-radius: 9px; 
+            cursor: pointer;
+            background: var(--oranye); 
+            color: #fff; 
+            font-size: 13.5px; 
+            font-weight: 700;
+            box-shadow: 0 5px 12px rgba(255, 148, 28, .28);
             transition: background .2s;
         }
-        .tombol-masuk:hover { background: #e58316; }
-        .tombol-masuk:disabled { opacity: .75; cursor: wait; }
+        .tombol-masuk:hover { 
+            background: #e58316; 
+        }
+        .tombol-masuk:disabled { 
+            opacity: .75; 
+            cursor: wait; 
+        }
 
-        @media (max-width: 800px) {
-            .login-wrapper { grid-template-columns: 1fr; min-height: 0; max-width: 420px; }
-            .login-sidebar { display: none; }
-            .login-main { padding: 34px 26px; }
-            .logo-mobile { display: block; margin-bottom: 20px; }
-            .logo-mobile img { width: 64px; height: 64px; object-fit: contain; }
+        .form-footer-info { 
+            text-align: center; 
+            margin-top: 16px; 
+            font-size: 11.5px; 
+            color: #7b8aa5; 
+        }
+
+        @media (max-width: 700px) {
+            .login-wrapper { 
+                grid-template-columns: 1fr; 
+                max-width: 400px; 
+            }
+            .login-sidebar { 
+                display: none; 
+            }
+            .login-main { 
+                padding: 30px 24px; 
+            }
+            .logo-mobile { 
+                display: block; 
+                margin-bottom: 16px; 
+            }
+            .logo-mobile img { 
+                width: 56px; 
+                height: 56px; 
+                object-fit: contain; 
+            }
         }
     </style>
 </head>
@@ -104,11 +265,12 @@
 
 <div class="login-wrapper">
     <aside class="login-sidebar">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo PT. Intanwijaya" onerror="this.remove();">
-        <div>
+        <div class="brand">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo PT. Intanwijaya" onerror="this.remove();">
             <h1>KPI Kedisiplinan</h1>
-            <p>PT. Intanwijaya Internasional Tbk.</p>
+            <p>Departemen Formalin</p>
         </div>
+        <p class="tagline">Bersama membangun disiplin untuk kinerja yang lebih baik.</p>
     </aside>
 
     <main class="login-main">
@@ -118,7 +280,7 @@
 
         <div class="form-header">
             <h2>Masuk ke akun Anda</h2>
-            <p>Silakan masukkan username dan password untuk melanjutkan.</p>
+            <p>Silakan masukkan username dan password<br>untuk melanjutkan.</p>
         </div>
 
         @if ($errors->any())
@@ -148,6 +310,8 @@
             </div>
 
             <button type="submit" class="tombol-masuk" id="tombol-masuk">Masuk</button>
+
+            <div class="form-footer-info">Akses hanya untuk pengguna yang terdaftar.</div>
         </form>
     </main>
 </div>
@@ -165,6 +329,7 @@
         }
     }
 
+    // cegah kirim ganda: tombol dikunci setelah ditekan
     document.getElementById('form-login').addEventListener('submit', function () {
         var tombol = document.getElementById('tombol-masuk');
         tombol.disabled = true;
