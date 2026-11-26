@@ -29,7 +29,6 @@ return [
             ['label' => 'Data Karyawan', 'ikon' => 'user', 'rute' => 'admin.karyawan.index', 'pola' => 'admin.karyawan.*'],
             ['label' => 'Data Absensi', 'ikon' => 'calendar', 'anak' => [
                 ['label' => 'Rekap Absensi', 'rute' => 'admin.absensi.index', 'pola' => 'admin.absensi.*'],
-                ['label' => 'Konfirmasi Absensi', 'rute' => 'admin.kesalahan.index', 'pola' => 'admin.kesalahan.*'],
                 ['label' => 'Verifikasi Absensi', 'rute' => 'admin.verifikasi.index', 'pola' => 'admin.verifikasi.*'],
             ]],
             ['label' => 'Shift Kerja', 'ikon' => 'clock', 'rute' => 'admin.shift.index', 'pola' => 'admin.shift.*'],
