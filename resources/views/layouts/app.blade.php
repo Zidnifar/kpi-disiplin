@@ -68,7 +68,13 @@
 
                 <div class="dropdown">
                     <button type="button" class="pengguna-tombol" data-dropdown-tombol aria-haspopup="true">
-                        <span class="avatar"><x-icon nama="user" :ukuran="22" /></span>
+                        <span class="avatar" style="overflow: hidden;">
+                            @if (!empty($pengguna->foto))
+                                <img src="{{ $pengguna->foto }}" alt="{{ $pengguna->namaTampil() }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;">
+                            @else
+                                <x-icon nama="user" :ukuran="22" />
+                            @endif
+                        </span>
                         <span class="pengguna-info">
                             <strong>{{ $pengguna->namaTampil() }}</strong>
                             <span>{{ $pengguna->namaPeran() }}</span>
